@@ -45,4 +45,12 @@
             </div>
             {{$tasks->links()}}
         </div>
+        @if (session('success'))
+        @php
+        $d =session('success');
+        @endphp
+        <script>
+            alert(@json($d))
+        </script>
+        @endif
 </x-layouts.app>

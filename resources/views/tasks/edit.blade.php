@@ -18,7 +18,7 @@
                     @enderror
                 </div>
                 <div><label for="date">Due Date</label><br><input class="mt-1 w-full border border-white rounded p-2 bg-white text-black" value="{{$task->due_date}}" type="date" name="due_date" min="{{Str::of(now())->explode(' ')[0]}}" id="date">
-                    @error('date')
+                    @error('due_date')
                     <p class="text-xs text-red-500">{{$message}}</p>
                     @enderror
                 </div>
