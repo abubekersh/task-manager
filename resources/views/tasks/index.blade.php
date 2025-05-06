@@ -17,22 +17,26 @@
                     <option value="all" {{$filter=="all"?'selected':''}}>All</option>
                     <option value="pending" {{$filter=="pending"?'selected':''}}>Pending</option>
                     <option value="completed" {{$filter=="completed"?'selected':''}}>Completed</option>
+                    <option value="due" {{$filter=="due"?'selected':''}}>Due Tasks</option>
                 </select>
                 <button class="border border-white p-1 rounded text-black bg-white">apply</button>
             </form>
             @foreach ($tasks as $index => $task)
-            <div class="mt-4 rounded  p-4 h-24   {{$task->is_completed?'bg-gradient-to-t from-gray-500 to-black-500':$bg[$index % count($bg)]}} flex">
+            <div class="mt-4 rounded  p-4 h-24   {{$task->is_completed||$task->due_date <= now()& $task->due_date != null ?'bg-gradient-to-t from-gray-500 to-black-500':$bg[$index % count($bg)]}} flex">
                 <div class="grow">
                     <p class="text-xl text-center  font-bold  {{$task->is_completed?'line-through':''}}">{{$task->title}}</p>
                     <p class="text-center p-2 text-xs {{$task->is_completed?'line-through':''}}">{{$task->description}}</p>
                 </div>
                 <div class="mt-auto flex gap-2">
-                    @if ($task->is_completed)
-                    <a href="/tasks/{{$task->id}}/delete" class=" bg-white p-1 text-xs rounded text-red-400">Remove</a>
-                    @else
-                    <a href="/tasks/{{$task->id}}/edit" class=" bg-white p-1 text-xs rounded text-blue-400">Edit</a>
-                    <a href="/tasks/{{$task->id}}/complete" class=" bg-white p-1 text-xs rounded text-blue-400">Done</a>
-                    @endif
+                    @if ($task->due_date <= now() && $task->due_date != null && !$task->is_completed)
+                        <p class=" p-1 text-xs rounded text-red-400">Your task is Due</p>
+                        @endif
+                        @if ($task->is_completed)
+                        <a href="/tasks/{{$task->id}}/delete" class=" bg-white p-1 text-xs rounded text-red-400">Remove</a>
+                        @else
+                        <a href="/tasks/{{$task->id}}/edit" class=" bg-white p-1 text-xs rounded text-blue-400">Edit</a>
+                        <a href="/tasks/{{$task->id}}/complete" class=" bg-white p-1 text-xs rounded text-blue-400">Done</a>
+                        @endif
                 </div>
             </div>
             @endforeach
