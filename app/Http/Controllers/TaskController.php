@@ -32,7 +32,7 @@ class TaskController extends Controller
             'due_date' => 'date'
         ]);
         Task::create($task);
-        return redirect('/');
+        return redirect('/')->with('success', 'Task Created!');;
     }
     public function edit(int $task)
     {
@@ -51,18 +51,18 @@ class TaskController extends Controller
         $t->description = $task['description'];
         $t->due_date = $task['due_date'];
         $t->save();
-        return redirect('/');
+        return redirect('/')->with('success', 'Task updated!');
     }
     public function destroy(int $task)
     {
         Task::destroy($task);
-        return redirect('/');
+        return redirect('/')->with('success', 'Task Deleted!');;
     }
     public function complete(int $task)
     {
         $task = Task::find($task);
         $task->is_completed = true;
         $task->save();
-        return redirect()->back();
+        return redirect('/')->with('success', 'Task marked as complete!');;
     }
 }
