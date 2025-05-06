@@ -13,6 +13,8 @@ class TaskController extends Controller
             $tasks = Task::where('is_completed', '=', '1')->orderBy('is_completed')->orderByDesc('created_at')->paginate(4);
         } elseif ($request->filter == "pending") {
             $tasks = Task::where('is_completed', '=', '0')->orderBy('is_completed')->orderByDesc('created_at')->paginate(4);
+        } elseif ($request->filter == "due") {
+            $tasks = Task::where('due_date', '<=', now())->where('is_completed', '=', '0')->orderBy('is_completed')->orderByDesc('created_at')->paginate(4);
         } else {
             $tasks = Task::where('id', '>', '1')->orderBy('is_completed')->orderByDesc('created_at')->paginate(4);
         }
@@ -26,7 +28,8 @@ class TaskController extends Controller
     {
         $task = $request->validate([
             'title' => 'required|string|max:255|min:5',
-            'description' => 'max:500'
+            'description' => 'max:500',
+            'due_date' => 'date'
         ]);
         Task::create($task);
         return redirect('/');
@@ -40,11 +43,13 @@ class TaskController extends Controller
     {
         $task = $request->validate([
             'title' => 'required|string|max:255|min:5',
-            'description' => 'max:500'
+            'description' => 'max:500',
+            'due_date' => 'date'
         ]);
         $t = Task::find($request->id);
         $t->title = $task['title'];
         $t->description = $task['description'];
+        $t->due_date = $task['due_date'];
         $t->save();
         return redirect('/');
     }
